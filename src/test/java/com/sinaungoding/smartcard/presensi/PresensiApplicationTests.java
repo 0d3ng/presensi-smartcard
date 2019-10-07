@@ -25,7 +25,7 @@ public class PresensiApplicationTests {
     @Autowired
     AttendanceDao attendanceDao;
 
-    //    @Ignore
+    @Ignore
     @Test
     public void insertTest() {
         Mahasiswa mahasiswa = new Mahasiswa();
@@ -49,7 +49,7 @@ public class PresensiApplicationTests {
     public void presensiTest() {
         ACR122U acr122U = new ACR122U();
 //        new Thread(() -> {
-        String uid = "";
+        String uid = null;
         while (true) {
             try {
                 String uuid = acr122U.getUID();
@@ -75,10 +75,27 @@ public class PresensiApplicationTests {
                 }
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
-                uid = "";
+                uid = null;
             }
         }
 //        }).start();
+    }
+
+    @Test
+    public void readTest() {
+        ACR122U acr122U = new ACR122U();
+        while (true){
+            try {
+                String uid = acr122U.getUID();
+            } catch (Exception e) {
+                log.error(e.getMessage());
+            }
+            try {
+                Thread.sleep(250);
+            } catch (InterruptedException e) {
+                log.error(e.getMessage(), e);
+            }
+        }
     }
 
 }
