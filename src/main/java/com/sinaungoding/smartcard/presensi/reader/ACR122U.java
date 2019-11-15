@@ -1,5 +1,6 @@
 package com.sinaungoding.smartcard.presensi.reader;
 
+import com.sinaungoding.smartcard.presensi.reader.data.DataKartuByte;
 import com.sinaungoding.smartcard.presensi.util.HexUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -144,8 +145,10 @@ public class ACR122U {
             if (response.getSW1() == 0x90 && response.getSW2() == 0x00) {
                 log.info(HexUtils.bytesToHexString(response.getData()));
                 if (response.getData()[2] == 0x00) {
-                    log.info("");
+                    log.info("Auth success");
                     return true;
+                }else {
+                    log.warn("Auth fail");
                 }
             }
         } catch (CardException e) {
@@ -257,5 +260,39 @@ public class ACR122U {
             throw e;
         }
         return false;
+    }
+
+    public boolean writeDataParkir(DataKartuByte kartuByte) {
+        boolean success = false;
+        byte address = 1;
+        for (byte[] block : kartuByte.getBlocks()) {
+            try {
+                success = WriteBlock(address, block);
+                address++;
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+                success = false;
+                break;
+            }
+        }
+        return success;
+    }
+
+    public boolean readDataParkir(byte[] data) {
+        boolean success = false;
+        int dest = 0;
+        for (int i = 1; i <= 3; i++) {
+            try {
+                byte[] block = ReadBlock((byte) i);
+                System.arraycopy(block, 0, data, dest, 16);
+                dest += 16;
+                success = true;
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+                success = false;
+                break;
+            }
+        }
+        return success;
     }
 }

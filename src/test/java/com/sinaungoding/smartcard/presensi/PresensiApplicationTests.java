@@ -47,7 +47,7 @@ public class PresensiApplicationTests {
     }
 
     @Test
-//    @Ignore
+    @Ignore
     public void presensiTest() {
         ACR122U acr122U = new ACR122U();
 //        new Thread(() -> {
@@ -81,58 +81,6 @@ public class PresensiApplicationTests {
             }
         }
 //        }).start();
-    }
-
-    @Test
-    @Ignore
-    public void readUIDTest() {
-        ACR122U acr122U = new ACR122U();
-        while (true) {
-            try {
-                String uid = acr122U.getUID();
-            } catch (Exception e) {
-                log.error(e.getMessage());
-            }
-            try {
-                Thread.sleep(250);
-            } catch (InterruptedException e) {
-                log.error(e.getMessage(), e);
-            }
-        }
-    }
-
-    @Test
-    public void readCardTest() {
-        ACR122U acr122U = new ACR122U();
-        String UID = null;
-        while (true) {
-            try {
-                String uid = acr122U.getUID();
-                if (!uid.equals(UID)) {
-                    if (acr122U.AuthBlock((byte) 0x00, ACR122U.defaultKeyA, (byte) 0x60)) {
-                        byte[] readBlock = acr122U.ReadBlock((byte) 0x01);
-                        log.info("" + HexUtils.bytesToHexString(readBlock));
-                        byte[] blockName = Arrays.copyOfRange(readBlock, 0, 9);
-                        log.info("" + new String(blockName));
-
-                        //write data
-//                        String name = "NOPRIANTO";
-//                        if (acr122U.WriteBlock((byte) 0x01, name.getBytes())) {
-//                            log.info("Write success");
-//                        }
-                    }
-                }
-                UID = uid;
-            } catch (Exception e) {
-                log.error(e.getMessage());
-                UID = null;
-            }
-            try {
-                Thread.sleep(250);
-            } catch (InterruptedException e) {
-                log.error(e.getMessage(), e);
-            }
-        }
     }
 
 }
