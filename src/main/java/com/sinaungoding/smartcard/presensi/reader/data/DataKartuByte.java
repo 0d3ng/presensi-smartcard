@@ -11,11 +11,11 @@ import java.util.List;
 @Slf4j
 public class DataKartuByte {
     private byte[] nopol;//10
-    private byte[] tanggal;//8
+    private byte[] tanggal;//4
     private byte status_masuk;//1
     private byte kode_gate;//1
     private byte[] nip;//18
-    private byte[] expired;//8
+    private byte[] expired;//4
     private byte status_kartu;//1
     private byte[] data;
 
@@ -24,7 +24,7 @@ public class DataKartuByte {
 
     public DataKartuByte(byte[] nopol, byte[] tanggal, byte status_masuk, byte kode_gate, byte[] nip, byte[] expired, byte status_kartu) {
         try {
-            data = new byte[47];
+            data = new byte[39];
             this.nopol = nopol;
             this.tanggal = tanggal;
             this.status_masuk = status_masuk;
@@ -33,12 +33,12 @@ public class DataKartuByte {
             this.expired = expired;
             this.status_kartu = status_kartu;
             System.arraycopy(this.nopol, 0, data, 0, 10);
-            System.arraycopy(this.tanggal, 0, data, 10, 8);
-            data[18] = status_masuk;
-            data[19] = kode_gate;
-            System.arraycopy(this.nip, 0, data, 20, 18);
-            System.arraycopy(this.expired, 0, data, 38, 8);
-            data[46] = status_kartu;
+            System.arraycopy(this.tanggal, 0, data, 10, 4);
+            data[14] = status_masuk;
+            data[15] = kode_gate;
+            System.arraycopy(this.nip, 0, data, 16, 18);
+            System.arraycopy(this.expired, 0, data, 34, 4);
+            data[38] = status_kartu;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }

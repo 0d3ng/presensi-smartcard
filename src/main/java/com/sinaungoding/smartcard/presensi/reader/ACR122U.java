@@ -264,7 +264,7 @@ public class ACR122U {
 
     public boolean writeDataParkir(DataKartuByte kartuByte) {
         boolean success = false;
-        byte address = 1;
+        byte address = 4;
         for (byte[] block : kartuByte.getBlocks()) {
             try {
                 success = WriteBlock(address, block);
@@ -281,7 +281,7 @@ public class ACR122U {
     public boolean readDataParkir(byte[] data) {
         boolean success = false;
         int dest = 0;
-        for (int i = 1; i <= 3; i++) {
+        for (int i = 4; i < 7; i++) {
             try {
                 byte[] block = ReadBlock((byte) i);
                 System.arraycopy(block, 0, data, dest, 16);

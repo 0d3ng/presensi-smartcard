@@ -1,8 +1,12 @@
 package com.sinaungoding.smartcard.presensi.reader.util;
 
+import com.sinaungoding.smartcard.presensi.reader.data.DataKartuByte;
+import com.sinaungoding.smartcard.presensi.reader.data.DataKartuString;
+
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 public class ConvertUtil {
     public static String dateToHex(Date date) {
@@ -55,8 +59,8 @@ public class ConvertUtil {
     }
 
     public static byte[] longToBytes(long l) {
-        byte[] result = new byte[8];
-        for (int i = 7; i >= 0; i--) {
+        byte[] result = new byte[4];
+        for (int i = 3; i >= 0; i--) {
             result[i] = (byte) (l & 0xFF);
             l >>= 8;
         }
@@ -65,15 +69,23 @@ public class ConvertUtil {
 
     public static long bytesToLong(byte[] b) {
         long result = 0;
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < b.length; i++) {
             result <<= 8;
+            System.out.print(b[i] + " ");
             result |= (b[i] & 0xFF);
         }
+        System.out.println();
         return result;
     }
 
     public static void main(String[] args) {
-        System.out.println(dateToHex(new Date()));
+        Date date = new Date();
+        long tm = date.getTime() / 1000L;
+        System.out.println(tm);
+        System.out.println(byteArrayToHex(longToBytes(date.getTime() / 1000L), false));
+        System.out.println(longToBytes(date.getTime() / 1000L).length);
+        System.out.println(hexStringToByteArray(dateToHex(new Date(tm))).length);
+        System.out.println(dateToHex(new Date(date.getTime() / 1000L)));
         String hex = byteArrayToHex("NOPRIANTO".getBytes(), false);
         System.out.println(hex);
 
@@ -91,6 +103,30 @@ public class ConvertUtil {
 
         System.out.println(new String(bytes));
         System.out.println(zeroPadding("NOPRIANTO", 10));
+        System.out.println();
+        System.out.println();
+        String nopol = "AB2039YQ";
+//                        String nopol = "N2000YQ";
+        byte[] np = new byte[10];
+        System.arraycopy(nopol.getBytes(), 0, np, 0, nopol.length());
+        long dd = System.currentTimeMillis() / 1000;
+        byte[] tanggal = ConvertUtil.longToBytes(dd);
+        byte stIn = 1;
+        byte gate = 10;
+//                        String nip = "198911082019031020";//nopri
+        String nip = "197911152005012002";//bu dwi
+        byte stKartu = 1;
+        DataKartuByte kartuByte = new DataKartuByte(np, tanggal, stIn, gate,
+                nip.getBytes(), tanggal, stKartu);
+        System.out.println(ConvertUtil.byteArrayToHex(kartuByte.getData(), true));
+        List<byte[]> blocks = kartuByte.getBlocks();
+        for (byte[] block : blocks) {
+            System.out.println(ConvertUtil.byteArrayToHex(block, true));
+        }
+        DataKartuString kartuString = new DataKartuString(kartuByte.getData());
+        System.out.println(kartuString.getTanggal());
+        System.out.println(kartuString.getExpired());
+        System.out.println(dd);
 
     }
 }

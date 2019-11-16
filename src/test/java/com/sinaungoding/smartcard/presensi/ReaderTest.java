@@ -10,6 +10,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -45,12 +46,12 @@ public class ReaderTest {
             try {
                 String uid = acr122U.getUID();
                 if (!uid.equals(UID)) {
-                    if (acr122U.AuthBlock((byte) 0x02, ACR122U.defaultKeyA, (byte) 0x60)) {
+                    if (acr122U.AuthBlock((byte) 0x04, ACR122U.defaultKeyA, (byte) 0x60)) {
 //                        read data
-                        for (int i = 0; i < 16; i++) {
-                            byte[] readBlock = acr122U.ReadBlock((byte) i);
-                            log.info("" + HexUtils.bytesToHexString(readBlock));
-                        }
+//                        for (int i = 4; i < 8; i++) {
+//                            byte[] readBlock = acr122U.ReadBlock((byte) i);
+//                            log.warn("block " + i + ": " + HexUtils.bytesToHexString(readBlock));
+//                        }
 //                        byte[] blockName = Arrays.copyOfRange(readBlock, 0, readBlock.length);
 //                        String name = new String(trim(blockName));
 //                        log.info("" + name);
@@ -63,34 +64,36 @@ public class ReaderTest {
 
                         //write data real
 //                        String nopol = "AB2039YQ";
+////                        String nopol = "N2000YQ";
 //                        byte[] np = new byte[10];
 //                        System.arraycopy(nopol.getBytes(), 0, np, 0, nopol.length());
-//                        long dd = System.currentTimeMillis();
+//                        long dd = System.currentTimeMillis() / 1000L;
 //                        byte[] tanggal = ConvertUtil.longToBytes(dd);
 //                        byte stIn = 1;
 //                        byte gate = 10;
-//                        String nip = "198911082019031020";
+////                        String nip = "198911082019031020";//nopri
+//                        String nip = "197911152005012002";//bu dwi
 //                        byte stKartu = 1;
 //                        DataKartuByte kartuByte = new DataKartuByte(np, tanggal, stIn, gate,
 //                                nip.getBytes(), tanggal, stKartu);
-//                        log.info("HAI...");
 //                        log.info(ConvertUtil.byteArrayToHex(kartuByte.getData(), true));
-//                        log.info("");
-//
 //                        log.info("" + acr122U.writeDataParkir(kartuByte));
 
 //                        read data real
-//                        byte[] data = new byte[48];
-//                        log.info("" + acr122U.readDataParkir(data));
-//                        log.info(ConvertUtil.byteArrayToHex(data, true));
-//                        DataKartuString kartuString = new DataKartuString(data);
-//                        log.info(kartuString.getNopol());
-//                        log.info(DATE_FORMAT.format(new Date(kartuString.getTanggal())));
-//                        log.info(kartuString.getNip());
-//                        log.info(DATE_FORMAT.format(new Date(kartuString.getExpired())));
-//                        log.info("" + kartuString.getKodeGate());
-//                        log.info("" + kartuString.getStatusKartu());
-//                        log.info("" + kartuString.getStatusMasuk());
+                        byte[] data = new byte[48];
+                        log.info("" + acr122U.readDataParkir(data));
+                        log.info(ConvertUtil.byteArrayToHex(data, true));
+                        DataKartuString kartuString = new DataKartuString(data);
+                        log.info(kartuString.getNopol());
+                        log.info("" + kartuString.getTanggal());
+                        log.info(DATE_FORMAT.format(new Date(kartuString.getTanggal() * 1000)));
+                        log.info(kartuString.getNip());
+                        log.info("" + kartuString.getExpired());
+                        log.info(DATE_FORMAT.format(Date.from(Instant.ofEpochSecond(kartuString.getExpired()))));
+                        log.info(DATE_FORMAT.format(Date.from(Instant.ofEpochSecond(kartuString.getExpired()))));
+                        log.info("" + kartuString.getKodeGate());
+                        log.info("" + kartuString.getStatusKartu());
+                        log.info("" + kartuString.getStatusMasuk());
 
                     }
                 }
