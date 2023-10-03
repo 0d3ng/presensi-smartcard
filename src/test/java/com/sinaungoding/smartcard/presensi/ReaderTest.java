@@ -20,12 +20,13 @@ public class ReaderTest {
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Test
-    @Ignore
+//    @Ignore
     public void readUIDTest() {
         ACR122U acr122U = new ACR122U();
         while (true) {
             try {
                 String uid = acr122U.getUID();
+                log.info("{}",uid);
             } catch (Exception e) {
                 log.error(e.getMessage());
             }
@@ -38,7 +39,7 @@ public class ReaderTest {
     }
 
     @Test
-//    @Ignore
+    @Ignore
     public void readCardTest() {
         ACR122U acr122U = new ACR122U();
         String UID = null;
