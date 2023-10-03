@@ -5,6 +5,7 @@ import com.sinaungoding.smartcard.presensi.dao.MahasiswaDao;
 import com.sinaungoding.smartcard.presensi.entity.Attendance;
 import com.sinaungoding.smartcard.presensi.entity.Mahasiswa;
 import com.sinaungoding.smartcard.presensi.reader.ACR122U;
+import com.sinaungoding.smartcard.presensi.util.HexUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Arrays;
 import java.util.Date;
 
 @RunWith(SpringRunner.class)
@@ -25,7 +27,7 @@ public class PresensiApplicationTests {
     @Autowired
     AttendanceDao attendanceDao;
 
-    //    @Ignore
+    @Ignore
     @Test
     public void insertTest() {
         Mahasiswa mahasiswa = new Mahasiswa();
@@ -45,11 +47,11 @@ public class PresensiApplicationTests {
     }
 
     @Test
-//    @Ignore
+    @Ignore
     public void presensiTest() {
         ACR122U acr122U = new ACR122U();
 //        new Thread(() -> {
-        String uid = "";
+        String uid = null;
         while (true) {
             try {
                 String uuid = acr122U.getUID();
@@ -75,7 +77,7 @@ public class PresensiApplicationTests {
                 }
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
-                uid = "";
+                uid = null;
             }
         }
 //        }).start();
